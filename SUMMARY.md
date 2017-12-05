@@ -1,5 +1,5 @@
 # Summary
 
 * [Introduction](README.md)
-* [SPI](chapter1.md)
+* [SPI](SPI.md)
 
