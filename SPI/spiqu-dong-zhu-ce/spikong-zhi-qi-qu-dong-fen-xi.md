@@ -17,6 +17,6 @@ static struct platform_driver s3c64xx_spi_driver = {
 	.id_table = s3c64xx_spi_driver_ids,
 };
 ```
-
+该结构体的成员主要包括设备device_driver、驱动注册函数probe、驱动移除函数remove以及设备ID。
 ####spi驱动注册
 
