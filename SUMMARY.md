@@ -8,4 +8,5 @@
     * [spi设备驱动层](SPI/linux-spikuang-jia-jian-jie/spishe-bei-qu-dong-ceng.md)
   * [spi工作流程分析](SPI/spigong-zuo-liu-cheng-fen-xi.md)
     * [spi驱动注册流程分析](SPI/spiqu-dong-zhu-ce.md)
+      * [spi控制器驱动分析](SPI/spiqu-dong-zhu-ce/spikong-zhi-qi-qu-dong-fen-xi.md)
 
