@@ -35,7 +35,7 @@ err0:
 
 ####spi控制器驱动的注册
 &emsp;&emsp;spi控制器的注册与具体硬件有关，不同的硬件，驱动略有差异，但是都遵循Linux spi框架。本文以s3c64xx为例进行分析。
-
+&emsp;&emsp;函数s3c64xx_spi_probe是s3c64xx控制器的注册函数
 ####spi控制器注册
 
 
