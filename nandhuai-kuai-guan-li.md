@@ -12,6 +12,10 @@
 
 ####OOB：
 &emsp;&emsp;OOB(out of band)即spare area区，nand flash中每个page后都有一个oob区，主要用来存放硬件ECC校验码、坏块标记以及文件系统的组织信息，主要用于硬件纠错很坏块处理。一般一个page大小为2Kbyte,oob区一般为128byte或者64byte。
+&emsp;&emsp;page可以分为大页和小页，目前主流的nand为大页。大页（big page）每个page大小为2Kbyte，坏块存储在每个block中第一个page中的第1和第2个字节中。
+
+####BBT：
+&emsp;&emsp;BBT(bad block table),不同厂家对坏块管理的方法不同，比如专门使用nand做存储的，会把bbt放到block0，因为**第0个block一定是好块**，但是如果nand被用来存储uboot，则第0个block不能用来存储BBT了。还有另一种做法是将BBT放在最后一个block中，但是必须保证该块不是坏块。BBT大小与nand的大小有关，nand越大，BBT就越大。通常系统启动时会查找BBT的位置，但是仅会查找maxblocks(linux driver定义在nand_bbt_descr结构体中)个block中，并且一般是从最后一个block中查找。BBT一般都有一个BBT备份block。
 
 参考文献：
 1. MTD\(4\)---nand flash的bbt坏块表的建立函数代码分析&emsp;[http://blog.csdn.net/zhanzheng520/article/details/11770359](http://blog.csdn.net/zhanzheng520/article/details/11770359)
