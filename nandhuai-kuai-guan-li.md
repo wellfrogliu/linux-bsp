@@ -20,6 +20,6 @@
 
 参考文献：
 1. MTD\(4\)---nand flash的bbt坏块表的建立函数代码分析&emsp;[http://blog.csdn.net/zhanzheng520/article/details/11770359](http://blog.csdn.net/zhanzheng520/article/details/11770359)
-2. nand flash 坏块&emsp;[](http://blog.csdn.net/seasonyrq/article/details/51510965)
+2. nand flash 坏块&emsp;[http://blog.csdn.net/seasonyrq/article/details/51510965](http://blog.csdn.net/seasonyrq/article/details/51510965)
 
 
