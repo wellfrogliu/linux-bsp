@@ -1,0 +1,2 @@
+&ensp;&ensp;&ensp;&ensp;坏块表简称BBT（bad block table），Linux kernel的bbt做的也比较简单，就是把整个flash的block在内存里面用2bit位图来标识good/bad，这样，在上层判断一个block是否good时就不需要再去读取flash的oob里面的坏块标记了，只需要读取内存里面的bbt就可以了，这是一个比较重要的优化。这块内存就称为坏块表。
+&ensp;&ensp;&ensp;&ensp;坏块表一般是在boot或者kernel第一次运行时建立的，后面会存在
