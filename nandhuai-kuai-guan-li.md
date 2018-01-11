@@ -7,7 +7,8 @@
 ####坏块的定义：
 坏块是指nand中不能进行读写或者擦除操作的区域。由于擦除的最小单元为1个block，因此坏块也是以一个block为最小单元。每个坏块的标志位于该block的第一个page oob区的前两个字节。判断一个坏块是否为坏块，就可以判断这两个字节是否为非0xff值，若为0xff,则无坏块。nand在出厂时都会出现坏块，会在对应的块中标记为坏块。
 
-
+####ECC：
+&emsp;&emsp;ECC的全称是Error Checking and Correction，nand flash 在读数据时有可能会出现一个或几个bit的错误，因此可以使用ECC进行纠正和校验。不同的nand的ECC校验能力不一样，ECC有1bit、4bit、8bit等，这些ECC位数一般指1bit/page、4bit/page、8bit/page等。
 
 参考文献：
 1. MTD\(4\)---nand flash的bbt坏块表的建立函数代码分析&emsp;[http://blog.csdn.net/zhanzheng520/article/details/11770359](http://blog.csdn.net/zhanzheng520/article/details/11770359)
