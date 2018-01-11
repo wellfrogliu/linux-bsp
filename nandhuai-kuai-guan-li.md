@@ -10,6 +10,9 @@
 ####ECC：
 &emsp;&emsp;ECC的全称是Error Checking and Correction，nand flash 在读数据时有可能会出现一个或几个bit的错误，因此可以使用ECC进行纠正和校验。不同的nand的ECC校验能力不一样，ECC有1bit、4bit、8bit等，这些ECC位数一般指1bit/page、4bit/page、8bit/page等。
 
+####OOB：
+
+
 参考文献：
 1. MTD\(4\)---nand flash的bbt坏块表的建立函数代码分析&emsp;[http://blog.csdn.net/zhanzheng520/article/details/11770359](http://blog.csdn.net/zhanzheng520/article/details/11770359)
 2. 
