@@ -128,7 +128,7 @@ static uint8_t mirror_pattern[] = {'1', 't', 'b', 'B' };
 				return res;
 		}
  ```
-下面对write_bbt
+下面对write_bbt函数进行分析。write_bbt位于nand_bbt.c文件中，
 
 2. nand_base.c文件：
 &emsp;&emsp;在nand_base.c文件中,主要完成nand的扫描与新建工作。首先调用nand_scan函数进行nand扫描，int nand_scan(struct 
