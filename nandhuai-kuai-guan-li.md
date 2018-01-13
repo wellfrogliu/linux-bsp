@@ -18,6 +18,7 @@
 &emsp;&emsp;BBT(bad block table),不同厂家对坏块管理的方法不同，比如专门使用nand做存储的，会把bbt放到block0，因为**第0个block一定是好块**，但是如果nand被用来存储uboot，则第0个block不能用来存储BBT了。还有另一种做法是将BBT放在最后一个block中，但是必须保证该块不是坏块。BBT大小与nand的大小有关，nand越大，BBT就越大。通常系统启动时会查找BBT的位置，但是仅会查找maxblocks(linux driver定义在nand_bbt_descr结构体中)个block中，并且一般是从最后一个block中查找。BBT一般都有一个BBT备份block。
 &emsp;&emsp;在BBT中每2个bit表示一个block。
 
+nand中与bbt的有关函数位于\drivers\mtd\spi-nand\spi-nand-bbt.c中（注意spi-nand-bbt.c是spi nand）。
 参考文献：
 1. MTD\(4\)---nand flash的bbt坏块表的建立函数代码分析&emsp;[http://blog.csdn.net/zhanzheng520/article/details/11770359](http://blog.csdn.net/zhanzheng520/article/details/11770359)
 2. nand flash 坏块&emsp;[http://blog.csdn.net/seasonyrq/article/details/51510965](http://blog.csdn.net/seasonyrq/article/details/51510965)
