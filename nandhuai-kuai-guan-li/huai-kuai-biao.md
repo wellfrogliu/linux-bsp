@@ -1,8 +1,8 @@
-  坏块表简称BBT（bad block table），Linux kernel的bbt做的也比较简单，就是把整个flash的block在内存里面用2bit位图来标识good/bad，这样，在上层判断一个block是否good时就不需要再去读取flash的oob里面的坏块标记了，只需要读取内存里面的bbt就可以了，这是一个比较重要的优化。  
+坏块表简称BBT（bad block table），Linux kernel的bbt做的也比较简单，就是把整个flash的block在内存里面用2bit位图来标识good/bad，这样，在上层判断一个block是否good时就不需要再去读取flash的oob里面的坏块标记了，只需要读取内存里面的bbt就可以了，这是一个比较重要的优化。  
     坏块表一般是在boot或者kernel第一次运行时建立的，后面会存储在内存和nand的某些block上，一般为第一个或者最后几个block上。  
   每次Linux启动时，都会先查询nand中是否存在BBT block，如果存在，则直接将BBT读取至内存中，否则的话，则会创建BBT，并将新建的BBT写入nand中。
 
-  主要涉及到的文件有：
+主要涉及到的文件有：
 
 #### BBT的扫描与新建
 
@@ -11,11 +11,11 @@
 
 2. **nand\_scan\_tail**：位于nand\_base.c文件中，主要完成nand相关结构体 中未初始化成员函数的初始化以及BBT的扫描和新建。在函数中
 
-1. **nand\_scan\_bbt**：位于nand_bbt.c_文件中，主要完成扫描、查找、读取以及当bbt不存在时，创建bbt。重点关注search\_read\_bbts和check\_create 两个函数。其中search\_read\_bbts函数主要完成bbt的扫描；check\_create 主要完成在bbt不存在时，创建以及写入bbt。
+3. **nand\_scan\_bbt**：位于nand_bbt.c_文件中，主要完成扫描、查找、读取以及当bbt不存在时，创建bbt。重点关注search\_read\_bbts和check\_create 两个函数。其中search\_read\_bbts函数主要完成bbt的扫描；check\_create 主要完成在bbt不存在时，创建以及写入bbt。
 
-2. **search\_read\_bbts**：主要完成主要完成bbt的扫描工作，通过调用search\_bbt函数实现。
+4. **search\_read\_bbts**：主要完成主要完成bbt的扫描工作，通过调用search\_bbt函数实现。
 
-3. **search\_bbt**：扫描设备的坏块表，读取nand上的块数据，与坏块表模板匹配，成功则记录坏块表的地址。
+5. **search\_bbt**：扫描设备的坏块表，读取nand上的块数据，与坏块表模板匹配，成功则记录坏块表的地址。
 
    * 判断bbt的查找方向，通过td-&gt;options & NAND\_BBT\_LASTBLOCK判断bbt的查找方向即block的读取方向。NAND\_BBT\_LASTBLOCK表示bbt查找方向为从最后向前，一般bbt的查找都是从后向前搜索。
      ```c
@@ -40,6 +40,7 @@
      }
      ```
    * 读取block的非oob数据并与bbt关键字匹配。从后向前读取block中page数据，一共读取td-&gt;maxblocks次，该变量由NAND\_BBT\_SCAN\_MAXBLOCKS控制，由于nand可能存在最后四个block出现坏块的情况，因此可以适当将该值增大。
+
      ```c
      /* The maximum number of blocks to scan for a bbt */
      #define NAND_BBT_SCAN_MAXBLOCKS    4
@@ -47,7 +48,7 @@
 
      接着调用check\_pattern函数进行bbt block匹配，返回0，则表示找到了bbt，将该块的地址保存在td-&gt;pages\[i\]中，并且保存bbt的版本号。
 
-4. **check\_pattern**：该函数主要完成检查传入的数据是否包含bbt模板，模板如下所示，如果传入洞房缓存区包含"Bbt0"则说明该block是bbt的block，如果包含“1tbB”则说明该block是bbt的镜像block。
+6. **check\_pattern**：该函数主要完成检查传入的数据是否包含bbt模板，模板如下所示，如果传入洞房缓存区包含"Bbt0"则说明该block是bbt的block，如果包含“1tbB”则说明该block是bbt的镜像block。
 
    ```c
    /* Generic flash bbt descriptors */
@@ -57,7 +58,7 @@
 
    至此search\_read\_bbts函数的功能已经分析完毕，下面继续分析check\_create函数。
 
-5. **check\_create**：该函数主要根据上面的search\_read\_bbts扫描结果判断是否存在bbt，如果不存在，则在该函数进行新建，如果bbt丢失一个或者版本号不对，则更新该bbt。
+7. **check\_create**：该函数主要根据上面的search\_read\_bbts扫描结果判断是否存在bbt，如果不存在，则在该函数进行新建，如果bbt丢失一个或者版本号不对，则更新该bbt。
 
    * 判断bbt是否存在。判断td-&gt;pages\[i\]是否为-1，判断是否存在bbt，如果td-&gt;pages\[i\] = -1， 则需要创建bbt，代码如下：  
      \`\`\`c
@@ -92,23 +93,23 @@
             }  
         }
 
-       这里面首先会判断md是否为0，即镜像bbt是否存在。
-       - 如果create = 1，则需要创建bbt，调用create_bbt函数完成创建工作，该函数后续再分析。创建代码如下：
-       ```c
-             if (create) {
-                /* Create the bad block table by scanning the device? */
-                if (!(td->options & NAND_BBT_CREATE))
-                    continue;
+     这里面首先会判断md是否为0，即镜像bbt是否存在。
 
-                /* Create the table in memory by scanning the chip(s) */
-                if (!(this->bbt_options & NAND_BBT_CREATE_EMPTY))
-                    create_bbt(mtd, buf, bd, chipsel);
-                td->version[i] = 1;
-                if (md)
-                    md->version[i] = 1;
-            }
+     * 如果create = 1，则需要创建bbt，调用create\_bbt函数完成创建工作，该函数后续再分析。创建代码如下：
+
+       ```c
+          if (create) { / Create the bad block table by scanning the device? / if (!(td->options & NAND_BBT_CREATE)) continue;
+          /* Create the table in memory by scanning the chip(s) */
+          if (!(this->bbt_options & NAND_BBT_CREATE_EMPTY))
+              create_bbt(mtd, buf, bd, chipsel);
+          td->version[i] = 1;
+          if (md)
+              md->version[i] = 1;
+          }
+       ```
 
    * 如果不需要创建bbt，则rd = 1，会调用下面的代码：
+
      ```c
          if (rd) {
             res = read_abs_bbt(mtd, buf, rd, chipsel);
@@ -122,8 +123,10 @@
      ```
 
      在这段代码里面，会read\_abs\_bbt函数读取bbt的block数据，读取的数据长度与芯片的大小有关。然后对读取的数据做ecc校验，如果失败，则表明该block数据已经损坏，不能再用作bbt的block。
+
    * 接着会判断rd2是否为1，原理与rd=1的代码原理一样。主要跟md是否为1有关。
    * 接着如果需要创建bbt，则调用write\_bbt函数，写入bbt。代码如下：
+
      ```c
          if ((writeops & 0x01) && (td->options & NAND_BBT_WRITE)) {
             printf("write_bbt\n");
@@ -136,7 +139,7 @@
 
      下面对write\_bbt函数进行分析。write\_bbt位于nand\_bbt.c文件中，
 
-6. nand\_base.c文件：  
+8. nand\_base.c文件：  
      在nand\_base.c文件中,主要完成nand的扫描与新建工作。首先调用nand\_scan函数进行nand扫描，
 
    ```c
