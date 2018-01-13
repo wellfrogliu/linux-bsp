@@ -63,7 +63,7 @@
    * 判断bbt是否存在。判断td-&gt;pages\[i\]是否为-1，判断是否存在bbt，如果td-&gt;pages\[i\] = -1， 则需要创建bbt，代码如下：  
      \`\`\`c
 
-     ```
+     ```c
      if (md) {   / Mirrored table available? /
             if (td->pages[i] == -1 && md->pages[i] == -1) {
                 create = 1;
@@ -94,9 +94,7 @@
      }
      ```
 
-   * 
-
-     这里面首先会判断md是否为0，即镜像bbt是否存在。
+   * 这里面首先会判断md是否为0，即镜像bbt是否存在。
 
      * 如果create = 1，则需要创建bbt，调用create\_bbt函数完成创建工作，该函数后续再分析。创建代码如下：
 
@@ -114,54 +112,54 @@
           }
        ```
 
-* 如果不需要创建bbt，则rd = 1，会调用下面的代码：
-
-  ```c
-      if (rd) {
-         res = read_abs_bbt(mtd, buf, rd, chipsel);
-         if (mtd_is_eccerr(res)) {
-             /* Mark table as invalid */
-             rd->pages[i] = -1;
-             rd->version[i] = 0;
-             i--;
-             continue;
-         }
-  ```
-
-  在这段代码里面，会read\_abs\_bbt函数读取bbt的block数据，读取的数据长度与芯片的大小有关。然后对读取的数据做ecc校验，如果失败，则表明该block数据已经损坏，不能再用作bbt的block。
-
-* 接着会判断rd2是否为1，原理与rd=1的代码原理一样。主要跟md是否为1有关。
-
-* 接着如果需要创建bbt，则调用write\_bbt函数，写入bbt。代码如下：
-
-  ```c
-      if ((writeops & 0x01) && (td->options & NAND_BBT_WRITE)) {
-         printf("write_bbt\n");
-         printf("Write the bad block table to the device\n");
-         res = write_bbt(mtd, buf, td, md, chipsel);
-         if (res < 0)
-             return res;
-     }
-  ```
-
-  下面对write\_bbt函数进行分析。write\_bbt位于nand\_bbt.c文件中，
-
-1. nand\_base.c文件：  
-     在nand\_base.c文件中,主要完成nand的扫描与新建工作。首先调用nand\_scan函数进行nand扫描，
+8. 如果不需要创建bbt，则rd = 1，会调用下面的代码：
 
    ```c
-   int nand_scan(struct mtd_info *mtd, int maxchips)
-   {
-    int ret;
-
-    ret = nand_scan_ident(mtd, maxchips, NULL);
-    if (!ret)
-        ret = nand_scan_tail(mtd);
-    return ret;
-   }
+       if (rd) {
+          res = read_abs_bbt(mtd, buf, rd, chipsel);
+          if (mtd_is_eccerr(res)) {
+              /* Mark table as invalid */
+              rd->pages[i] = -1;
+              rd->version[i] = 0;
+              i--;
+              continue;
+          }
    ```
 
-   其中nand\_scan\_ident主要完成nand ID的识别以及跟chip相关的成员函数的初始化，nand\_scan\_tail主要完成
+   在这段代码里面，会read\_abs\_bbt函数读取bbt的block数据，读取的数据长度与芯片的大小有关。然后对读取的数据做ecc校验，如果失败，则表明该block数据已经损坏，不能再用作bbt的block。
+
+9. 接着会判断rd2是否为1，原理与rd=1的代码原理一样。主要跟md是否为1有关。
+
+10. 接着如果需要创建bbt，则调用write\_bbt函数，写入bbt。代码如下：
+
+    ```c
+        if ((writeops & 0x01) && (td->options & NAND_BBT_WRITE)) {
+           printf("write_bbt\n");
+           printf("Write the bad block table to the device\n");
+           res = write_bbt(mtd, buf, td, md, chipsel);
+           if (res < 0)
+               return res;
+       }
+    ```
+
+    下面对write\_bbt函数进行分析。write\_bbt位于nand\_bbt.c文件中，
+
+11. nand\_base.c文件：  
+      在nand\_base.c文件中,主要完成nand的扫描与新建工作。首先调用nand\_scan函数进行nand扫描，
+
+    ```c
+    int nand_scan(struct mtd_info *mtd, int maxchips)
+    {
+     int ret;
+
+     ret = nand_scan_ident(mtd, maxchips, NULL);
+     if (!ret)
+         ret = nand_scan_tail(mtd);
+     return ret;
+    }
+    ```
+
+    其中nand\_scan\_ident主要完成nand ID的识别以及跟chip相关的成员函数的初始化，nand\_scan\_tail主要完成
 
 
 
