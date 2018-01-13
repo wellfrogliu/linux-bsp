@@ -98,7 +98,8 @@
      * 如果create = 1，则需要创建bbt，调用create\_bbt函数完成创建工作，该函数后续再分析。创建代码如下：
 
        ```c
-          if (create) { / Create the bad block table by scanning the device? / 
+          /*Create the bad block table by scanning the device?*/ 
+          if (create) { 
               if (!(td->options & NAND_BBT_CREATE)) 
                   continue;
               /* Create the table in memory by scanning the chip(s) */
