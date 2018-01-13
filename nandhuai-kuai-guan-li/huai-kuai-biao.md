@@ -104,8 +104,30 @@ static uint8_t mirror_pattern[] = {'1', 't', 'b', 'B' };
 				md->version[i] = 1;
 		}
  ```
-
-
+ - 如果不需要创建bbt，则rd = 1，会调用下面的代码：
+ ```c
+ 		if (rd) {
+			res = read_abs_bbt(mtd, buf, rd, chipsel);
+			if (mtd_is_eccerr(res)) {
+				/* Mark table as invalid */
+				rd->pages[i] = -1;
+				rd->version[i] = 0;
+				i--;
+				continue;
+			}
+ ```
+在这段代码里面，会read_abs_bbt函数读取bbt的block数据，读取的数据长度与芯片的大小有关。然后对读取的数据做ecc校验，如果失败，则表明该block数据已经损坏，不能再用作bbt的block。
+ - 接着会判断rd2是否为1，原理与rd=1的代码原理一样。主要跟md是否为1有关。
+ - 接着如果需要创建bbt，则调用write_bbt函数，写入bbt。代码如下：
+ ```c 
+ 		if ((writeops & 0x01) && (td->options & NAND_BBT_WRITE)) {
+			printf("write_bbt\n");
+			printf("Write the bad block table to the device\n");
+			res = write_bbt(mtd, buf, td, md, chipsel);
+			if (res < 0)
+				return res;
+		}
+ ```
 
 
 2. nand_base.c文件：
