@@ -89,7 +89,21 @@ static uint8_t mirror_pattern[] = {'1', 't', 'b', 'B' };
  
  ```
 这里面首先会判断md是否为0，即镜像bbt是否存在。
+ - 如果create = 1，则需要创建bbt，调用create_bbt函数完成创建工作，该函数后续再分析。创建代码如下：
+ ```c
+ 		if (create) {
+			/* Create the bad block table by scanning the device? */
+			if (!(td->options & NAND_BBT_CREATE))
+				continue;
 
+			/* Create the table in memory by scanning the chip(s) */
+			if (!(this->bbt_options & NAND_BBT_CREATE_EMPTY))
+				create_bbt(mtd, buf, bd, chipsel);
+			td->version[i] = 1;
+			if (md)
+				md->version[i] = 1;
+		}
+ ```
 
 
 
