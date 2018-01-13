@@ -45,7 +45,7 @@ if (td->options & NAND_BBT_LASTBLOCK) {
 ```
 &emsp;&emsp;接着调用check_pattern函数进行bbt block匹配，返回0，则表示找到了bbt，将该块的地址保存在td->pages[i]中，并且保存bbt的版本号。
 
-5. **nand_scan_tail**：该函数主要完成检查传入的数据是否包含bbt模板，模板如下所示，如果传入洞房缓存区包含"Bbt0"则说明该block是bbt的block，如果包含“1tbB”则说明该block是bbt的镜像block。
+5. **check_pattern**：该函数主要完成检查传入的数据是否包含bbt模板，模板如下所示，如果传入洞房缓存区包含"Bbt0"则说明该block是bbt的block，如果包含“1tbB”则说明该block是bbt的镜像block。
 ```c
 /* Generic flash bbt descriptors */
 static uint8_t bbt_pattern[] = {'B', 'b', 't', '0' };
