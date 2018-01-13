@@ -16,7 +16,7 @@
 3. **search_read_bbts**：主要完成主要完成bbt的扫描工作，通过调用search_bbt函数实现。
 
 4. **search_bbt**：扫描设备的坏块表，读取nand上的块数据，与坏块表模板匹配，成功则记录坏块表的地址。
- - 判断读取block的方向，
+ - 判断bbt的查找方向，通过td->options & NAND_BBT_LASTBLOCK判断bbt的查找方向即block的读取方向。NAND_BBT_LASTBLOCK表示bbt查找方向为从最后向前
  ```c
 if (td->options & NAND_BBT_LASTBLOCK) {
 		startblock = (mtd->size >> this->bbt_erase_shift) - 1;
@@ -26,7 +26,7 @@ if (td->options & NAND_BBT_LASTBLOCK) {
 		dir = 1;
 	}
 ```
-
+ - 接着判断
 2. nand_base.c文件：
 &emsp;&emsp;在nand_base.c文件中,主要完成nand的扫描与新建工作。首先调用nand_scan函数进行nand扫描，int nand_scan(struct 
 ```c
