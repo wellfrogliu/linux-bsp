@@ -5,7 +5,7 @@
 &emsp;&emsp;主要涉及到的文件有：
 
 1. spi-nand-mtd.c文件：
-&emsp;&emsp;当加载nand驱动时，会首先调用spi_nand_mtd_register函数，对nand驱动进行注册。该函数会对spi_nand_chip很nand_chip的某些成员函数进行初始化，未初始化的函数留给后面的函数进行初始化。在该函数中会进行nand ID识别，通过调用nand_scan_ident函数实现。
+&emsp;&emsp;当加载nand驱动时，会首先调用spi_nand_mtd_register函数，对nand驱动进行注册。该函数会对spi_nand_chip很nand_chip的某些成员函数进行初始化，未初始化的函数留给后面的函数进行初始化。在该函数中会进行nand ID识别，通过调用nand_scan_ident函数实现。检测到nand芯片后，接着会调用nand_scan_tail函数，主要完成nand相关结构体 中未初始化成员函数的初始化以及BBT的扫描和新建；接着会调用nand_register函数对nand进行注册。
 2. nand_base.c文件：
 &emsp;&emsp;在nand_base.c文件中,主要完成nand的扫描与新建工作。首先调用nand_scan函数进行nand扫描，int nand_scan(struct 
 ```c
