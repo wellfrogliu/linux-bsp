@@ -64,38 +64,37 @@
      \`\`\`c
 
      ```
-
+     if (md) {   / Mirrored table available? /
+            if (td->pages[i] == -1 && md->pages[i] == -1) {
+                create = 1;
+                writeops = 0x03;
+            } else if (td->pages[i] == -1) {
+                rd = md;
+                writeops = 0x01;
+            } else if (md->pages[i] == -1) {
+                rd = td;
+                writeops = 0x02;
+            } else if (td->version[i] == md->version[i]) {
+                rd = td;
+                if (!(td->options & NAND_BBT_VERSION))
+                    rd2 = md;
+            } else if (((int8_t)(td->version[i] - md->version[i])) > 0) {
+                rd = td;
+                 writeops = 0x02;
+             } else {
+                 rd = md;
+                 writeops = 0x01;
+             } else {
+                 if \(td-&gt;pages\[i\] == -1\) {  
+                 create = 1;
+                 writeops = 0x01;
+             } else {
+                 rd = td;
+             }
+     }
      ```
 
-   * if \(md\) {   /_ Mirrored table available? _/  
-            if \(td-&gt;pages\[i\] == -1 && md-&gt;pages\[i\] == -1\) {  
-                create = 1;  
-                writeops = 0x03;  
-            } else if \(td-&gt;pages\[i\] == -1\) {  
-                rd = md;  
-                writeops = 0x01;  
-            } else if \(md-&gt;pages\[i\] == -1\) {  
-                rd = td;  
-                writeops = 0x02;  
-            } else if \(td-&gt;version\[i\] == md-&gt;version\[i\]\) {  
-                rd = td;  
-                if \(!\(td-&gt;options & NAND\_BBT\_VERSION\)\)  
-                    rd2 = md;  
-            } else if \(\(\(int8\_t\)\(td-&gt;version\[i\] - md-&gt;version\[i\]\)\) &gt; 0\) {  
-                rd = td;  
-                writeops = 0x02;  
-            } else {  
-                rd = md;  
-                writeops = 0x01;  
-            }  
-        } else {  
-            if \(td-&gt;pages\[i\] == -1\) {  
-                create = 1;  
-                writeops = 0x01;  
-            } else {  
-                rd = td;  
-            }  
-        }
+   * 
 
      这里面首先会判断md是否为0，即镜像bbt是否存在。
 
@@ -115,39 +114,39 @@
           }
        ```
 
-   * 如果不需要创建bbt，则rd = 1，会调用下面的代码：
+* 如果不需要创建bbt，则rd = 1，会调用下面的代码：
 
-     ```c
-         if (rd) {
-            res = read_abs_bbt(mtd, buf, rd, chipsel);
-            if (mtd_is_eccerr(res)) {
-                /* Mark table as invalid */
-                rd->pages[i] = -1;
-                rd->version[i] = 0;
-                i--;
-                continue;
-            }
-     ```
+  ```c
+      if (rd) {
+         res = read_abs_bbt(mtd, buf, rd, chipsel);
+         if (mtd_is_eccerr(res)) {
+             /* Mark table as invalid */
+             rd->pages[i] = -1;
+             rd->version[i] = 0;
+             i--;
+             continue;
+         }
+  ```
 
-     在这段代码里面，会read\_abs\_bbt函数读取bbt的block数据，读取的数据长度与芯片的大小有关。然后对读取的数据做ecc校验，如果失败，则表明该block数据已经损坏，不能再用作bbt的block。
+  在这段代码里面，会read\_abs\_bbt函数读取bbt的block数据，读取的数据长度与芯片的大小有关。然后对读取的数据做ecc校验，如果失败，则表明该block数据已经损坏，不能再用作bbt的block。
 
-   * 接着会判断rd2是否为1，原理与rd=1的代码原理一样。主要跟md是否为1有关。
+* 接着会判断rd2是否为1，原理与rd=1的代码原理一样。主要跟md是否为1有关。
 
-   * 接着如果需要创建bbt，则调用write\_bbt函数，写入bbt。代码如下：
+* 接着如果需要创建bbt，则调用write\_bbt函数，写入bbt。代码如下：
 
-     ```c
-         if ((writeops & 0x01) && (td->options & NAND_BBT_WRITE)) {
-            printf("write_bbt\n");
-            printf("Write the bad block table to the device\n");
-            res = write_bbt(mtd, buf, td, md, chipsel);
-            if (res < 0)
-                return res;
-        }
-     ```
+  ```c
+      if ((writeops & 0x01) && (td->options & NAND_BBT_WRITE)) {
+         printf("write_bbt\n");
+         printf("Write the bad block table to the device\n");
+         res = write_bbt(mtd, buf, td, md, chipsel);
+         if (res < 0)
+             return res;
+     }
+  ```
 
-     下面对write\_bbt函数进行分析。write\_bbt位于nand\_bbt.c文件中，
+  下面对write\_bbt函数进行分析。write\_bbt位于nand\_bbt.c文件中，
 
-8. nand\_base.c文件：  
+1. nand\_base.c文件：  
      在nand\_base.c文件中,主要完成nand的扫描与新建工作。首先调用nand\_scan函数进行nand扫描，
 
    ```c
