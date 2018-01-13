@@ -16,7 +16,7 @@
 3. **search_read_bbts**：主要完成主要完成bbt的扫描工作，通过调用search_bbt函数实现。
 
 4. **search_bbt**：扫描设备的坏块表，读取nand上的块数据，与坏块表模板匹配，成功则记录坏块表的地址。
- - 判断bbt的查找方向，通过td->options & NAND_BBT_LASTBLOCK判断bbt的查找方向即block的读取方向。NAND_BBT_LASTBLOCK表示bbt查找方向为从最后向前
+ - 判断bbt的查找方向，通过td->options & NAND_BBT_LASTBLOCK判断bbt的查找方向即block的读取方向。NAND_BBT_LASTBLOCK表示bbt查找方向为从最后向前，一般bbt的查找都是从后向前搜索。
  ```c
 if (td->options & NAND_BBT_LASTBLOCK) {
 		startblock = (mtd->size >> this->bbt_erase_shift) - 1;
