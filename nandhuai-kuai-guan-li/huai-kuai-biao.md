@@ -54,9 +54,10 @@ static uint8_t mirror_pattern[] = {'1', 't', 'b', 'B' };
 至此search_read_bbts函数的功能已经分析完毕，下面继续分析check_create函数。
 
 6. **check_create**：该函数主要根据上面的search_read_bbts扫描结果判断是否存在bbt，如果不存在，则在该函数进行新建，如果bbt丢失一个或者版本号不对，则更新该bbt。
- - 判断bbt是否存在。判断td->pages[i]是否为-1，判断是否存在bbt，代码如下：
+ - 判断bbt是否存在。判断td->pages[i]是否为-1，判断是否存在bbt，如果td->pages[i] = -1， 则需要创建bbt，代码如下：
  ```c
- 		if (md) {
+/* Mirrored table available? */
+		if (md) {
 			if (td->pages[i] == -1 && md->pages[i] == -1) {
 				create = 1;
 				writeops = 0x03;
@@ -87,7 +88,7 @@ static uint8_t mirror_pattern[] = {'1', 't', 'b', 'B' };
 		}
  
  ```
-
+这里面首先会判断md是否为0，即镜像bbt是否存在。
 
 
 
