@@ -52,6 +52,8 @@ static uint8_t bbt_pattern[] = {'B', 'b', 't', '0' };
 static uint8_t mirror_pattern[] = {'1', 't', 'b', 'B' };
 ```
 至此search_read_bbts函数的功能已经分析完毕，下面继续分析check_create函数。
+
+1. **check_create**：
 2. nand_base.c文件：
 &emsp;&emsp;在nand_base.c文件中,主要完成nand的扫描与新建工作。首先调用nand_scan函数进行nand扫描，int nand_scan(struct 
 ```c
