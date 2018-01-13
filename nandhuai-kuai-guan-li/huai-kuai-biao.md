@@ -63,7 +63,11 @@
    * 判断bbt是否存在。判断td-&gt;pages\[i\]是否为-1，判断是否存在bbt，如果td-&gt;pages\[i\] = -1， 则需要创建bbt，代码如下：  
      \`\`\`c
 
-     if \(md\) {   /_ Mirrored table available? _/  
+     ```
+
+     ```
+
+   * if \(md\) {   /_ Mirrored table available? _/  
             if \(td-&gt;pages\[i\] == -1 && md-&gt;pages\[i\] == -1\) {  
                 create = 1;  
                 writeops = 0x03;  
