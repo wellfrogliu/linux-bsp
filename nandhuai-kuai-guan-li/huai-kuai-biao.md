@@ -98,13 +98,15 @@
      * 如果create = 1，则需要创建bbt，调用create\_bbt函数完成创建工作，该函数后续再分析。创建代码如下：
 
        ```c
-          if (create) { / Create the bad block table by scanning the device? / if (!(td->options & NAND_BBT_CREATE)) continue;
-          /* Create the table in memory by scanning the chip(s) */
-          if (!(this->bbt_options & NAND_BBT_CREATE_EMPTY))
-              create_bbt(mtd, buf, bd, chipsel);
-          td->version[i] = 1;
-          if (md)
-              md->version[i] = 1;
+          if (create) { / Create the bad block table by scanning the device? / 
+              if (!(td->options & NAND_BBT_CREATE)) 
+                  continue;
+              /* Create the table in memory by scanning the chip(s) */
+              if (!(this->bbt_options & NAND_BBT_CREATE_EMPTY))
+                  create_bbt(mtd, buf, bd, chipsel);
+              td->version[i] = 1;
+              if (md)
+                  md->version[i] = 1;
           }
        ```
 
@@ -125,6 +127,7 @@
      在这段代码里面，会read\_abs\_bbt函数读取bbt的block数据，读取的数据长度与芯片的大小有关。然后对读取的数据做ecc校验，如果失败，则表明该block数据已经损坏，不能再用作bbt的block。
 
    * 接着会判断rd2是否为1，原理与rd=1的代码原理一样。主要跟md是否为1有关。
+
    * 接着如果需要创建bbt，则调用write\_bbt函数，写入bbt。代码如下：
 
      ```c
