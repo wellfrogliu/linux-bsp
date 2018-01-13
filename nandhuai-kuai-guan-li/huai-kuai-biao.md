@@ -53,7 +53,46 @@ static uint8_t mirror_pattern[] = {'1', 't', 'b', 'B' };
 ```
 至此search_read_bbts函数的功能已经分析完毕，下面继续分析check_create函数。
 
-1. **check_create**：
+6. **check_create**：该函数主要根据上面的search_read_bbts扫描结果判断是否存在bbt，如果不存在，则在该函数进行新建，如果bbt丢失一个或者版本号不对，则更新该bbt。
+ - 判断bbt是否存在。判断td->pages[i]是否为-1，判断是否存在bbt，代码如下：
+ ```c
+ 		if (md) {
+			if (td->pages[i] == -1 && md->pages[i] == -1) {
+				create = 1;
+				writeops = 0x03;
+			} else if (td->pages[i] == -1) {
+				rd = md;
+				writeops = 0x01;
+			} else if (md->pages[i] == -1) {
+				rd = td;
+				writeops = 0x02;
+			} else if (td->version[i] == md->version[i]) {
+				rd = td;
+				if (!(td->options & NAND_BBT_VERSION))
+					rd2 = md;
+			} else if (((int8_t)(td->version[i] - md->version[i])) > 0) {
+				rd = td;
+				writeops = 0x02;
+			} else {
+				rd = md;
+				writeops = 0x01;
+			}
+		} else {
+			if (td->pages[i] == -1) {
+				create = 1;
+				writeops = 0x01;
+			} else {
+				rd = td;
+			}
+		}
+ 
+ ```
+
+
+
+
+
+
 2. nand_base.c文件：
 &emsp;&emsp;在nand_base.c文件中,主要完成nand的扫描与新建工作。首先调用nand_scan函数进行nand扫描，int nand_scan(struct 
 ```c
