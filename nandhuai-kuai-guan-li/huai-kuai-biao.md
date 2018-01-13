@@ -26,7 +26,32 @@ if (td->options & NAND_BBT_LASTBLOCK) {
 		dir = 1;
 	}
 ```
- - 接着判断
+ - 接着判断是否每个chip都包括一个bbt文件。一般每个chip都会包括一个bbt。代码如下：
+ ```c
+ 	/* Do we have a bbt per chip? */
+	if (td->options & NAND_BBT_PERCHIP) {
+		chips = this->numchips;
+		bbtblocks = this->chipsize >> this->bbt_erase_shift;
+		startblock &= bbtblocks - 1;
+	} else {
+		chips = 1;
+		bbtblocks = mtd->size >> this->bbt_erase_shift;
+	}
+ ```
+ - 读取block的非oob数据并与bbt关键字匹配。从后向前读取block中page数据，一共读取td->maxblocks次，该变量由NAND_BBT_SCAN_MAXBLOCKS控制，由于nand可能存在最后四个block出现坏块的情况，因此可以适当将该值增大。
+ ```c
+ /* The maximum number of blocks to scan for a bbt */
+#define NAND_BBT_SCAN_MAXBLOCKS	4
+```
+&emsp;&emsp;接着调用check_pattern函数进行bbt block匹配，返回0，则表示找到了bbt，将该块的地址保存在td->pages[i]中，并且保存bbt的版本号。
+
+5. **nand_scan_tail**：该函数主要完成检查传入的数据是否包含bbt模板，模板如下所示，如果传入洞房缓存区包含"Bbt0"则说明该block是bbt的block，如果包含“1tbB”则说明该block是bbt的镜像block。
+```c
+/* Generic flash bbt descriptors */
+static uint8_t bbt_pattern[] = {'B', 'b', 't', '0' };
+static uint8_t mirror_pattern[] = {'1', 't', 'b', 'B' };
+```
+
 2. nand_base.c文件：
 &emsp;&emsp;在nand_base.c文件中,主要完成nand的扫描与新建工作。首先调用nand_scan函数进行nand扫描，int nand_scan(struct 
 ```c
