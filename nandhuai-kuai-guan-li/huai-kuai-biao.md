@@ -168,6 +168,7 @@ if (td->options & NAND_BBT_LASTBLOCK) {
 			
 		}  
 ```
+if语句首先判断td->options & NAND_BBT_LASTBLOCK是否为真，来决定查找方向。
     找到空闲的block后，将该块全部、、、、、
 
 11. nand\_base.c文件：  
