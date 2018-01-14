@@ -189,5 +189,6 @@ if语句首先判断td->options & NAND_BBT_LASTBLOCK是否为真，来决定查�
 
     其中nand\_scan\_ident主要完成nand ID的识别以及跟chip相关的成员函数的初始化，nand\_scan\_tail主要完成
 
+——>nand_scan——>nand_scan_tail 
 
 
