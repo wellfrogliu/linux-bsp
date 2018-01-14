@@ -142,7 +142,33 @@
        }
     ```
 
-    下面对write\_bbt函数进行分析。write\_bbt位于nand\_bbt.c文件中，主要完成bbt的写入（包括内存和nand对应的bbt block），首先循环查找可用于bbt区的nand blcok块，查找的
+    下面对write\_bbt函数进行分析。write\_bbt位于nand\_bbt.c文件中，主要完成bbt的写入（包括内存和nand对应的bbt block），首先循环查找可用于bbt区的nand blcok块，查找的方向是从后向前，一共查找td->maxblocks个block，代码如下：
+```c  
+if (td->options & NAND_BBT_LASTBLOCK) {
+			startblock = numblocks * (chip + 1) - 1;
+			dir = -1;
+		} else {
+			startblock = chip * numblocks;
+			dir = 1;
+		}
+
+		for (i = 0; i < td->maxblocks; i++) {
+			int block = startblock + dir * i;
+			/* Check, if the block is bad */
+			switch (bbt_get_entry(this, block)) {
+			case BBT_BLOCK_WORN:
+			case BBT_BLOCK_FACTORY_BAD:
+				continue;
+			}
+			page = block <<
+				(this->bbt_erase_shift - this->page_shift);
+			/* Check, if the block is used by the mirror table */
+			if (!md || md->pages[chip] != page)
+				goto write;
+			
+		}  
+```
+    找到空闲的block后，将该块全部、、、、、
 
 11. nand\_base.c文件：  
       在nand\_base.c文件中,主要完成nand的扫描与新建工作。首先调用nand\_scan函数进行nand扫描，
