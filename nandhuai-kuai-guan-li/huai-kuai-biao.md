@@ -142,7 +142,7 @@
        }
     ```
 
-    下面对write\_bbt函数进行分析。write\_bbt位于nand\_bbt.c文件中，
+    下面对write\_bbt函数进行分析。write\_bbt位于nand\_bbt.c文件中，主要完成bbt的写入（包括内存和nand对应的bbt block），首先循环查找可用于bbt区的nand blcok块，查找的
 
 11. nand\_base.c文件：  
       在nand\_base.c文件中,主要完成nand的扫描与新建工作。首先调用nand\_scan函数进行nand扫描，
