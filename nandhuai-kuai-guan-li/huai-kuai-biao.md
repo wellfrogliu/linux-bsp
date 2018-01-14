@@ -169,7 +169,7 @@ if (td->options & NAND_BBT_LASTBLOCK) {
 		}  
 ```
 if语句首先判断td->options & NAND_BBT_LASTBLOCK是否为真，来决定查找方向。
-查找到可用的block后，将bbt的模板和version写入该block的数据区，接着遍历该nand的每一个block看其是否为坏块，填充bbt的内容
+查找到可用的block后，将bbt的模板和version写入该block的数据区，接着遍历该nand的每一个block看其是否为坏块，填充bbt的内容。至此bbt的创建工作在该函数完成
     找到空闲的block后，将该块全部、、、、、
 
 11. nand\_base.c文件：  
