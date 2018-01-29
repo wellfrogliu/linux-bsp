@@ -9,3 +9,5 @@
 [1-3-implement-uid-and-gid-mount-options-for-ext2.diff](/assets/1-3-implement-uid-and-gid-mount-options-for-ext2.diff)
 [2-3-implement-uid-and-gid-mount-options-for-ext3.diff](/assets/2-3-implement-uid-and-gid-mount-options-for-ext3.diff)
 [3-3-implement-uid-and-gid-mount-options-for-ext4.diff](/assets/3-3-implement-uid-and-gid-mount-options-for-ext4.diff)
+
+**但是修改uid和gid只是修改了文件和文件夹的拥有者和组，满足了普通用户访问root创建的文件的需求，但是无法满足多个不同的普通用户同时访问的需求**
