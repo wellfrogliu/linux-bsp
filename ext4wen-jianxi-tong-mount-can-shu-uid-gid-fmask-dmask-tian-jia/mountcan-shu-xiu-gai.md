@@ -5,4 +5,4 @@
 2. 使用bindfs库，该库可以将一个目录挂载到其他目录，并且修改目录的权限。具体可以参考[https://bindfs.org/](https://bindfs.org/) 。但是该方案基于fuse，性能较差；
 3. 修改ext4源代码，实现在mount的时候添加uid、gid、fmask、dmask等参数，完成文件权限的修改。
 
-修改uid和giu的代码，可以参考![1-3-implement-uid-and-gid-mount-options-for-ext2.diff](/assets/1-3-implement-uid-and-gid-mount-options-for-ext2.diff)
+修改uid和giu的代码，可以参考[1-3-implement-uid-and-gid-mount-options-for-ext2.diff](/assets/1-3-implement-uid-and-gid-mount-options-for-ext2.diff)、[2-3-implement-uid-and-gid-mount-options-for-ext3.diff](/assets/2-3-implement-uid-and-gid-mount-options-for-ext3.diff)和[3-3-implement-uid-and-gid-mount-options-for-ext4.diff](/assets/3-3-implement-uid-and-gid-mount-options-for-ext4.diff)
