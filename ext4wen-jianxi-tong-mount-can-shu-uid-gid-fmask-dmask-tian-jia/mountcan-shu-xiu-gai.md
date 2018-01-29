@@ -121,3 +121,20 @@ enum {
 
 &emsp;&emsp;
 
+函数parse_options主要负责对命令行进行数据解析，该函数调用了handle_mount_opt函数，来对fs_fmask和fs_dmask进行赋值，通过switch case结构来对token的值（match_table_t 结构体中定义）进行判断，从而实现数据的赋值，代码如下：
+```c
+switch (token) {
+case Opt_dmask:
+		if (match_octal(&args[0], &arg)) {
+			return -1;
+		}
+		sbi->fs_dmask = arg;
+		return 1;	
+	case Opt_fmask:
+		if (match_octal(&args[0], &arg)) {
+			return 0;
+		}
+		sbi->fs_fmask = arg;
+		printk("fs_fmask:%d\n",sbi->fs_fmask);
+		return 1;
+```
