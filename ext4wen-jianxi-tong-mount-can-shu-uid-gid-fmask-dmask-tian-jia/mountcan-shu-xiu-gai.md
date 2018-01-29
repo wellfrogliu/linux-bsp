@@ -138,3 +138,4 @@ switch (token) {
 		printk("fs_fmask:%d\n",sbi->fs_fmask);
 		return 1;
 ```
+代码中的函数match_octal功能是扫描args[0]的十进制字符串，并将结果赋值给arg，如果扫描成功则返回0，否则返回非0值。
