@@ -327,4 +327,4 @@ static int ext4_do_update_inode(handle_t *handle,
 ```
 该函数实现了更新inode节点的信息，在此处也进行inode权限的修改。
 
-总结可以发现：ext4全新的修改本质还是修改inode节点的模式，只需要在inode创建、更新时进行相关权限的设置即可。
+**总结可以发现：ext4全新的修改本质还是修改inode节点的模式，只需要在inode创建、更新时进行相关权限的设置即可。**
