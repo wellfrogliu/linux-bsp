@@ -119,9 +119,7 @@ enum {
 ```
 通过上述过程就定义了mount的参数dmask和fmask，可以在mount的时候使用这些参数了。但是mount的参数dmask和fmask时如何与ext4_sb_info结构体中fs_fmask和fs_dmask联系起来的呢？
 
-&emsp;&emsp;
-
-函数parse_options主要负责对命令行进行数据解析，该函数调用了handle_mount_opt函数，来对fs_fmask和fs_dmask进行赋值，通过switch case结构来对token的值（match_table_t 结构体中定义）进行判断，从而实现数据的赋值，代码如下：
+&emsp;&emsp;函数parse_options主要负责对命令行进行数据解析，该函数调用了handle_mount_opt函数，来对fs_fmask和fs_dmask进行赋值，通过switch case结构来对token的值（match_table_t 结构体中定义）进行判断，从而实现数据的赋值，代码如下：
 ```c
 switch (token) {
 	case Opt_dmask:
@@ -139,3 +137,4 @@ switch (token) {
 		return 1;
 ```
 代码中的函数match_octal功能是扫描args[0]的十进制字符串，并将结果赋值给arg，如果扫描成功则返回0，否则返回非0值。
+
