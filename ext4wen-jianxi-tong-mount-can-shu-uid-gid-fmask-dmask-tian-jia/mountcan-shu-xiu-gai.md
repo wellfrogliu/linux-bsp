@@ -1,0 +1,2 @@
+#mount参数修改
+在Linux文件系统中，ext2、ext3以及ext4默认的mount参数是不支持uid、gid、fmask、dmask等参数的，在某些场景下

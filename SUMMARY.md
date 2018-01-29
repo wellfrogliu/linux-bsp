@@ -11,4 +11,6 @@
       * [spi控制器驱动分析](SPI/spiqu-dong-zhu-ce/spikong-zhi-qi-qu-dong-fen-xi.md)
 * [nand坏块管理](nandhuai-kuai-guan-li.md)
   * [BBT坏块表](nandhuai-kuai-guan-li/huai-kuai-biao.md)
+* [ext4](ext4wen-jianxi-tong-mount-can-shu-uid-gid-fmask-dmask-tian-jia.md)
+  * [mount参数修改](ext4wen-jianxi-tong-mount-can-shu-uid-gid-fmask-dmask-tian-jia/mountcan-shu-xiu-gai.md)
 
