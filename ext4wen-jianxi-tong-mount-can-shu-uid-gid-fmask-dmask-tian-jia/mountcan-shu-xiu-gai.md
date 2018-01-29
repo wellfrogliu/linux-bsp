@@ -155,7 +155,7 @@ static inline mode_t ext4_make_mode(struct ext4_sb_info *ei, umode_t i_mode)
 
 static inline void ext4_fill_inode(struct super_block *sb, struct inode *inode)
 {
-	if (EXT4_SB(sb)->fs_fmask) {
+	if (EXT4_SB(sb)->fs_fmask  || EXT4_SB(sb)->fs_dmask) {
 		inode->i_mode = ext4_make_mode(EXT4_SB(sb), inode->i_mode);
 	}
 	return;
