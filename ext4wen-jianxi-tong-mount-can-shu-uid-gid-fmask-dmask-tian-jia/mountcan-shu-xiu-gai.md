@@ -69,6 +69,6 @@ struct ext4_sb_info {
 	struct kobject s_kobj;
 	struct completion s_kobj_unregister;
 	struct super_block *s_sb;
-	...省略
+	...省略...
 };
 ```
