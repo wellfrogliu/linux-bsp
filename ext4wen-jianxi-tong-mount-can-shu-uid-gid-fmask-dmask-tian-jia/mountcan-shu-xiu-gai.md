@@ -77,6 +77,18 @@ unsigned short fs_dmask;
 ```
 ext4_sb_info 结构体是ext4在内存中的超级块，记录了关于ext4的相关信息，该结构体并不会写入磁盘，仅仅存在于内存中。该结构体在ext4/super.c文件中的ext4_fill_super函数中初始化。该函数在mount的时候被调用，即该结构体在mount的时候才进行数据填充。由于我们没有在ext4_fill_super函数中对fs_fmask和fs_dmask进行初始化，所以这两个函数的默认值都是0（此处个人觉得应该初始化），那么fs_fmask和fs_dmask这两个变量是怎么赋值的呢？
 
-&emsp;&emsp;在
+&emsp;&emsp;fs_fmask和fs_dmask这两个变量主要通过mount的时候进行赋值，下面主要介绍一下赋值的流程：
+在super.c文件中static const match_table_t tokens这个结构体中定义了mount的参数，如下：
+```c	
+static const match_table_t tokens = {
+	{Opt_uid, "uid=%u"},
+	{Opt_diskuid, "uid=%u:%u"},
+	{Opt_gid, "gid=%u"},
+	{Opt_diskgid, "gid=%u:%u"},
+	{Opt_dmask, "dmask=%o"},
+	{Opt_fmask, "fmask=%o"},
+	{Opt_err, NULL},
+	};
+```
 
 
