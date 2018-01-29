@@ -137,4 +137,27 @@ switch (token) {
 		return 1;
 ```
 代码中的函数match_octal功能是扫描args[0]的十进制字符串，并将结果赋值给arg，如果扫描成功则返回0，否则返回非0值。
+下面需要使用dmask和fmask来设置inode的权限，在ext4.h中进行了实现：
+```c
+static inline mode_t ext4_make_mode(struct ext4_sb_info *ei, umode_t i_mode)
+{
+	umode_t		mode;
+	if(S_ISDIR(i_mode) ||i_mode == 0)
+	{
+		mode =   (00777 & ~ei->fs_dmask) | S_IFDIR;
+	}
+	else
+	{
+		mode =   (00777 &~ei->fs_fmask) | S_IFREG;
+	}
+	return mode;
+}
 
+static inline void ext4_fill_inode(struct super_block *sb, struct inode *inode)
+{
+	if (EXT4_SB(sb)->fs_fmask) {
+		inode->i_mode = ext4_make_mode(EXT4_SB(sb), inode->i_mode);
+	}
+	return;
+}
+```
