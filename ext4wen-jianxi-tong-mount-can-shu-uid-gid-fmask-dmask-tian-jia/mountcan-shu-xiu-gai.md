@@ -117,4 +117,7 @@ enum {
 	Opt_uid, Opt_diskuid, Opt_gid, Opt_diskgid,Opt_fmask, Opt_dmask, 
 };
 ```
+通过上述过程就定义了mount的参数dmask和fmask，可以在mount的时候使用这些参数了。但是mount的参数dmask和fmask时如何与ext4_sb_info结构体中fs_fmask和fs_dmask联系起来的呢？
+
+&emsp;&emsp;
 
