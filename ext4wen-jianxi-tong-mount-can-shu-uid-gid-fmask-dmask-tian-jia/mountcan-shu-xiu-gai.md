@@ -292,6 +292,7 @@ struct inode *ext4_iget(struct super_block *sb, unsigned long ino)
 	ext4_fill_inode(sb, inode);
 	/*end:by liuxuan5*/
 	...省略...
+}
 ```
 此处主要完成对已有文件和文件夹的权限修改，从硬盘中读取inode节点，修改权限。
 
