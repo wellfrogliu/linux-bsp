@@ -81,6 +81,7 @@ ext4_sb_info 结构体是ext4在内存中的超级块，记录了关于ext4的�
 在super.c文件中static const match_table_t tokens这个结构体中定义了mount的参数，如下：
 ```c	
 static const match_table_t tokens = {
+	...省略...
 	{Opt_uid, "uid=%u"},
 	{Opt_diskuid, "uid=%u:%u"},
 	{Opt_gid, "gid=%u"},
@@ -90,5 +91,30 @@ static const match_table_t tokens = {
 	{Opt_err, NULL},
 	};
 ```
-
+Opt_dmask和Opt_fmask在枚举变量enum中定义，如下：
+```c
+enum {
+	Opt_bsd_df, Opt_minix_df, Opt_grpid, Opt_nogrpid,
+	Opt_resgid, Opt_resuid, Opt_sb, Opt_err_cont, Opt_err_panic, Opt_err_ro,
+	Opt_nouid32, Opt_debug, Opt_removed,
+	Opt_user_xattr, Opt_nouser_xattr, Opt_acl, Opt_noacl,
+	Opt_auto_da_alloc, Opt_noauto_da_alloc, Opt_noload,
+	Opt_commit, Opt_min_batch_time, Opt_max_batch_time, Opt_journal_dev,
+	Opt_journal_path, Opt_journal_checksum, Opt_journal_async_commit,
+	Opt_abort, Opt_data_journal, Opt_data_ordered, Opt_data_writeback,
+	Opt_data_err_abort, Opt_data_err_ignore, Opt_test_dummy_encryption,
+	Opt_usrjquota, Opt_grpjquota, Opt_offusrjquota, Opt_offgrpjquota,
+	Opt_jqfmt_vfsold, Opt_jqfmt_vfsv0, Opt_jqfmt_vfsv1, Opt_quota,
+	Opt_noquota, Opt_barrier, Opt_nobarrier, Opt_err,
+	Opt_usrquota, Opt_grpquota, Opt_i_version, Opt_dax,
+	Opt_stripe, Opt_delalloc, Opt_nodelalloc, Opt_mblk_io_submit,
+	Opt_lazytime, Opt_nolazytime,
+	Opt_nomblk_io_submit, Opt_block_validity, Opt_noblock_validity,
+	Opt_inode_readahead_blks, Opt_journal_ioprio,
+	Opt_dioread_nolock, Opt_dioread_lock,
+	Opt_discard, Opt_nodiscard, Opt_init_itable, Opt_noinit_itable,
+	Opt_max_dir_size_kb, Opt_nojournal_checksum,
+	Opt_uid, Opt_diskuid, Opt_gid, Opt_diskgid,Opt_fmask, Opt_dmask, 
+};
+```
 
