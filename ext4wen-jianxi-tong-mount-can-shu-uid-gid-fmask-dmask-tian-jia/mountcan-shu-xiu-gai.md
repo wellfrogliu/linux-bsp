@@ -41,12 +41,12 @@ struct ext4_sb_info {
 	atomic64_t s_resv_clusters;
 	kuid_t s_resuid;
 	kgid_t s_resgid;
-	kuid_t s_uid;        /* make all files appear to belong to this uid */
+	***kuid_t s_uid;        /* make all files appear to belong to this uid */
 	kuid_t s_diskuid;      /* write this uid to disk (if s_uid != 0) */
 	kgid_t s_gid;          /* make all files appear to belong to this gid */
 	kgid_t s_diskgid;      /* write this gid to disk (if s_gid != 0) */
 	unsigned short fs_fmask; 
-	unsigned short fs_dmask;
+	unsigned short fs_dmask;****
 	unsigned short s_mount_state;
 	unsigned short s_pad;
 	int s_addr_per_block_bits;
