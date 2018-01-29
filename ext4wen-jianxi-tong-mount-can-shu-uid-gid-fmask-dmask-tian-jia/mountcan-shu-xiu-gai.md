@@ -75,4 +75,4 @@ struct ext4_sb_info {
 unsigned short fs_fmask;
 unsigned short fs_dmask;
 ```
-如果不修改uid和gid可以将
+ext4_sb_info 结构体是ext4在内存中的超级块，记录了关于ext4的相关信息，该结构体并不会写入磁盘，仅仅存在于内存中。该结构体在ext4/super.c文件中的ext4_fill_super函数中初始化。该函数在mount的时候被调用，即该结构体在mount的时候才进行数据填充。
