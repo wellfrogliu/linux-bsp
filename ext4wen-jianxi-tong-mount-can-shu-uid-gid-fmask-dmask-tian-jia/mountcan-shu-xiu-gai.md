@@ -161,3 +161,113 @@ static inline void ext4_fill_inode(struct super_block *sb, struct inode *inode)
 	return;
 }
 ```
+代码会首先判断ext4_sb_info结构体中fs_fmask和fs_dmask是否都为0，若为0，则不进行权限的修改。接着对调用ext4_make_mode函数，在这里面会首先判断当前的inode是否为目录，若inode为目录则设置目录权限，否则设置文件权限。
+函数ext4_fill_inode会在namei.c和inode.c中被调用。
+在namei.c文件中代码如下：用于更新inode
+```c
+static int ext4_create(struct inode *dir, struct dentry *dentry, umode_t mode,
+		       bool excl)
+{
+	handle_t *handle;
+	struct inode *inode;
+	int err, credits, retries = 0;
+
+	err = dquot_initialize(dir);
+	if (err)
+		return err;
+
+	credits = (EXT4_DATA_TRANS_BLOCKS(dir->i_sb) +
+		   EXT4_INDEX_EXTRA_TRANS_BLOCKS + 3);
+retry:
+	inode = ext4_new_inode_start_handle(dir, mode, &dentry->d_name, 0,
+					    NULL, EXT4_HT_DIR, credits);
+						
+	/*hikvision added:by liuxuan5 ,20180129*/
+	ext4_fill_inode(dir->i_sb, inode);
+	/*end:by liuxuan5*/
+	
+	handle = ext4_journal_current_handle();
+	err = PTR_ERR(inode);
+	if (!IS_ERR(inode)) {
+		inode->i_op = &ext4_file_inode_operations;
+		inode->i_fop = &ext4_file_operations;
+		ext4_set_aops(inode);
+		err = ext4_add_nondir(handle, dentry, inode);
+		if (!err && IS_DIRSYNC(dir))
+			ext4_handle_sync(handle);
+	}
+	if (handle)
+		ext4_journal_stop(handle);
+	if (err == -ENOSPC && ext4_should_retry_alloc(dir->i_sb, &retries))
+		goto retry;
+	return err;
+}
+```
+该函数主要完成文件的创建工作，因此需要在此处更新inode的权限，从而更改该文件的权限。
+```c
+static int ext4_mkdir(struct inode *dir, struct dentry *dentry, umode_t mode)
+{
+	handle_t *handle;
+	struct inode *inode;
+	int err, credits, retries = 0;
+
+	if (EXT4_DIR_LINK_MAX(dir))
+		return -EMLINK;
+
+	err = dquot_initialize(dir);
+	if (err)
+		return err;
+
+	credits = (EXT4_DATA_TRANS_BLOCKS(dir->i_sb) +
+		   EXT4_INDEX_EXTRA_TRANS_BLOCKS + 3);
+retry:
+	inode = ext4_new_inode_start_handle(dir, S_IFDIR | mode,
+					    &dentry->d_name,
+					    0, NULL, EXT4_HT_DIR, credits);
+						
+	/*hikvision added:by liuxuan5 ,20180129*/
+	ext4_fill_inode(dir->i_sb, inode);
+	/*end:by liuxuan5*/
+	
+	handle = ext4_journal_current_handle();
+	err = PTR_ERR(inode);
+	if (IS_ERR(inode))
+		goto out_stop;
+
+	inode->i_op = &ext4_dir_inode_operations;
+	inode->i_fop = &ext4_dir_operations;
+	err = ext4_init_new_dir(handle, dir, inode);
+	if (err)
+		goto out_clear_inode;
+	err = ext4_mark_inode_dirty(handle, inode);
+	if (!err)
+		err = ext4_add_entry(handle, dentry, inode);
+	if (err) {
+out_clear_inode:
+		clear_nlink(inode);
+		unlock_new_inode(inode);
+		ext4_mark_inode_dirty(handle, inode);
+		iput(inode);
+		goto out_stop;
+	}
+	ext4_inc_count(handle, dir);
+	ext4_update_dx_flag(dir);
+	err = ext4_mark_inode_dirty(handle, dir);
+	if (err)
+		goto out_clear_inode;
+	unlock_new_inode(inode);
+	d_instantiate(dentry, inode);
+	if (IS_DIRSYNC(dir))
+		ext4_handle_sync(handle);
+
+out_stop:
+	if (handle)
+		ext4_journal_stop(handle);
+	if (err == -ENOSPC && ext4_should_retry_alloc(dir->i_sb, &retries))
+		goto retry;
+	return err;
+}
+```
+该函数主要完成文件夹的创建，因此需要更新inode的权限设置，完成文件夹的权限修改。
+
+```
