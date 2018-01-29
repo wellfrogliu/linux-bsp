@@ -269,3 +269,29 @@ out_stop:
 }
 ```
 该函数主要完成文件夹的创建，因此需要更新inode的权限设置，完成文件夹的权限修改。
+
+在inode.c中也需要更新inode节点
+```c
+struct inode *ext4_iget(struct super_block *sb, unsigned long ino)
+{
+	struct ext4_iloc iloc;
+	struct ext4_inode *raw_inode;
+	struct ext4_inode_info *ei;
+	struct inode *inode;
+	journal_t *journal = EXT4_SB(sb)->s_journal;
+	long ret;
+	loff_t size;
+	int block;
+	uid_t i_uid;
+	gid_t i_gid;
+	...省略...
+		i_uid_write(inode, i_uid);
+	i_gid_write(inode, i_gid);
+	
+	/*hikvision added:by liuxuan5 ,20180129*/
+	ext4_fill_inode(sb, inode);
+	/*end:by liuxuan5*/
+	...省略...
+```
+此处主要完成对已有文件和文件夹的权限修改，从硬盘中读取inode节点，修改权限。
+
