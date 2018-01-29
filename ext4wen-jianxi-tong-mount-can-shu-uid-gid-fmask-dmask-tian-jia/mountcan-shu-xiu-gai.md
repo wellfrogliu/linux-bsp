@@ -296,3 +296,32 @@ struct inode *ext4_iget(struct super_block *sb, unsigned long ino)
 ```
 此处主要完成对已有文件和文件夹的权限修改，从硬盘中读取inode节点，修改权限。
 
+```c
+static int ext4_do_update_inode(handle_t *handle,
+				struct inode *inode,
+				struct ext4_iloc *iloc)
+{
+	struct ext4_inode *raw_inode = ext4_raw_inode(iloc);
+	struct ext4_inode_info *ei = EXT4_I(inode);
+	struct buffer_head *bh = iloc->bh;
+	struct super_block *sb = inode->i_sb;
+	int err = 0, rc, block;
+	int need_datasync = 0, set_large_file = 0;
+	uid_t i_uid;
+	gid_t i_gid;
+
+	spin_lock(&ei->i_raw_lock);
+
+	/* For fields not tracked in the in-memory inode,
+	 * initialise them to zero for new inodes. */
+	if (ext4_test_inode_state(inode, EXT4_STATE_NEW))
+		memset(raw_inode, 0, EXT4_SB(inode->i_sb)->s_inode_size);
+
+	ext4_get_inode_flags(ei);
+	
+	/*hikvision added:by liuxuan5 ,20180129*/
+	ext4_fill_inode(sb, inode);
+	/*end:by liuxuan5*/
+	...省略...
+}
+```
