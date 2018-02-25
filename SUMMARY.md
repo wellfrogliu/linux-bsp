@@ -13,4 +13,7 @@
   * [BBT坏块表](nandhuai-kuai-guan-li/huai-kuai-biao.md)
 * [ext4](ext4wen-jianxi-tong-mount-can-shu-uid-gid-fmask-dmask-tian-jia.md)
   * [mount参数修改](ext4wen-jianxi-tong-mount-can-shu-uid-gid-fmask-dmask-tian-jia/mountcan-shu-xiu-gai.md)
+* [raid](raid.md)
+  * [raid5](raid/raid5.md)
+    * [raid5 阵列同步](raid/raid5/raid5-zhen-lie-tong-bu.md)
 
