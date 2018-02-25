@@ -7,3 +7,4 @@
 
 mutex_trylock, mutex_lock区别：
 mutex_trylock：尝试获得一个互斥锁，立即返回；当返回值为0时表示获得成功，否则表示获得失败；
+mutex_lock：获得一个互斥锁，一直等待，直到成功；
