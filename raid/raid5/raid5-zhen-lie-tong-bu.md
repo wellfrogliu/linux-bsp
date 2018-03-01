@@ -19,6 +19,16 @@ raid5d()函数调用md_check_recovery(mddev)函数进行检查，当需要同步
 6. 如果阵列有热备盘或者不处于同步状态，则启动同步线程。
 
 
+####md_do_sync()
+
+
+####sync_request()
+
+
+####handle_stripe()
+
+
+
 
 
 
