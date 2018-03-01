@@ -97,7 +97,7 @@ void md_check_recovery(struct mddev *mddev)
 				sysfs_notify_dirent_safe(mddev->sysfs_state);//更新mddev的sysfs下状态。推测此处应该是阵列的状态信息更新到用户态
 		}
 
-		if (mddev->flags & MD_UPDATE_SB_FLAGS)
+		if (mddev->flags & MD_UPDATE_SB_FLAGS) //根据标志位判断需要更新超级块
 			md_update_sb(mddev, 0);//更新超级块
 
 		if (test_bit(MD_RECOVERY_RUNNING, &mddev->recovery) &&
