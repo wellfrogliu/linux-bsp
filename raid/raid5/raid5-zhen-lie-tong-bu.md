@@ -94,7 +94,7 @@ void md_check_recovery(struct mddev *mddev)
 				mddev->safemode = 0;//safemode为0 时，需要在同步完成后，设置safemode为1
 			spin_unlock(&mddev->lock);
 			if (did_change)
-				sysfs_notify_dirent_safe(mddev->sysfs_state);//更新mddev的sysfs下状态。推测用户态可以看到阵列的状态信息
+				sysfs_notify_dirent_safe(mddev->sysfs_state);//更新mddev的sysfs下状态。推测此处应该是阵列的状态信息更新到用户态
 		}
 
 		if (mddev->flags & MD_UPDATE_SB_FLAGS)
