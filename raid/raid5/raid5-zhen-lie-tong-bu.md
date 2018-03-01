@@ -24,6 +24,7 @@ raid5d()函数调用md_check_recovery(mddev)函数进行检查，当需要同步
 	if (mddev->flags & MD_UPDATE_SB_FLAGS) //根据标志位判断需要更新超级块
             md_update_sb(mddev, 0);//更新超级块
 ```
+2. 检查同步线程是否正在运行
 ```c
 void md_check_recovery(struct mddev *mddev)
 {
