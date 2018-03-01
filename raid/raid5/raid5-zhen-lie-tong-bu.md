@@ -4,7 +4,8 @@
 &emsp;&emsp;其中raid5d()为raid5的守护线程，md_check_recovery() 主要进行阵列状态检查，是否需要进行同步等操作；md_do_sync()主要为raid的同步处理线程，在该函数中会调用对应级别的raid同步函数sync_request()进行同步工作。下面对这些函数进行具体分析。
 
 ####raid5守护线程raid5d()
-&emsp;&emsp;raid5d()为raid5的守护线程，在注册流程为md_run（）-> (pers->run(mddev)) -> setup_conf(mddev) -> md_register_thread(raid5d, mddev, pers_name)
+&emsp;&emsp;raid5d()为raid5的守护线程，其注册流程为：
+md_run（）-> (pers->run(mddev)) -> setup_conf(mddev) -> md_register_thread(raid5d, mddev, pers_name)。
 
 ####raid5 阵列同步线程注册
 &emsp;&emsp;在raid5.c文件中，在函数run（）中通过mddev->sync_thread = md_register_thread(md_do_sync, mddev,"reshape");实现了同步函数的注册。我们可以知道raid5的同步处理函数为md_do_sync。
