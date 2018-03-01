@@ -3,6 +3,9 @@
 &emsp;&emsp;上述过程是一个同步操作过程的函数调用关系链。从这个关系链中可以知道，同步操作最后是由handle_stripe（）函数来实现的。
 &emsp;&emsp;其中raid5d()为raid5的守护线程，md_check_recovery() 主要进行阵列状态检查，是否需要进行同步等操作；md_do_sync()主要为raid的同步处理线程，在该函数中会调用对应级别的raid同步函数sync_request()进行同步工作。下面对这些函数进行具体分析。
 
+####raid5守护线程raid5d()
+
+
 ####raid5 阵列同步线程注册
 &emsp;&emsp;在raid5.c文件中，在函数run（）中通过mddev->sync_thread = md_register_thread(md_do_sync, mddev,"reshape");实现了同步函数的注册。我们可以知道raid5的同步处理函数为md_do_sync。
 ####raid5阵列同步的触发点
