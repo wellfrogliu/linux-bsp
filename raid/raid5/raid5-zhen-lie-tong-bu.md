@@ -19,6 +19,7 @@ raid5d()函数调用md_check_recovery(mddev)函数进行检查，当需要同步
 6. 如果阵列有热备盘或者不处于同步状态，则启动同步线程。
 
 对应上面功能的代码实现如下：
+
 1. 更新超级块。此处会根据阵列标志位判断是否设置了MD_UPDATE_SB_FLAGS标志位，来更新超级块。
 ```c
 	if (mddev->flags & MD_UPDATE_SB_FLAGS) //根据标志位判断需要更新超级块
@@ -32,6 +33,13 @@ raid5d()函数调用md_check_recovery(mddev)函数进行检查，当需要同步
             clear_bit(MD_RECOVERY_NEEDED, &mddev->recovery);
             goto unlock;
      }
+```
+3. 是否同步完成
+```c
+if (mddev->sync_thread) { //同步完成，获得结果，释放同步线程
+	md_reap_sync_thread(mddev);
+       	goto unlock;
+}
 ```
 ```c
 void md_check_recovery(struct mddev *mddev)
