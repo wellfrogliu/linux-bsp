@@ -17,6 +17,12 @@ raid5d()函数调用md_check_recovery(mddev)函数进行检查，当需要同步
 4. 如果有坏盘，则移除该盘；
 5. 如果阵列处于降级状态，则尝试添加热备盘；
 6. 如果阵列有热备盘或者不处于同步状态，则启动同步线程。
+
+对应上面功能的代码实现如下：
+```c
+	if (mddev->flags & MD_UPDATE_SB_FLAGS) //根据标志位判断需要更新超级块
+            md_update_sb(mddev, 0);//更新超级块
+```
 ```c
 void md_check_recovery(struct mddev *mddev)
 {
