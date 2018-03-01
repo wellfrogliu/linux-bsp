@@ -8,10 +8,8 @@
 md_run（）-> (pers->run(mddev)) -> setup_conf(mddev) -> md_register_thread(raid5d, mddev, pers_name)。
 raid5d()函数调用md_check_recovery(mddev)函数进行检查，当需要同步时，启动同步线程进行同步。
 
-####raid5 阵列同步线程注册
-&emsp;&emsp;在raid5.c文件中，在函数run（）中通过mddev->sync_thread = md_register_thread(md_do_sync, mddev,"reshape");实现了同步函数的注册。我们可以知道raid5的同步处理函数为md_do_sync。
-####raid5阵列同步的触发点
-&emsp;&emsp;raid5的主线程注册函数是raid5d，该函数主要做一些阵列状态检查，是否需要同步等。同步的检查主要通过md_check_recovery函数来完成同步检查。
+####md_check_recovery()
+&emsp;&emsp;同步的检查主要通过md_check_recovery函数来完成同步检查。
 **md_check_recovery**的功能主要包括：
 1. 是否需要更新超级块，必要时更新超级块；
 2. 检查同步线程是否正在运行，若正在运行，则不做任何处理；
@@ -19,6 +17,17 @@ raid5d()函数调用md_check_recovery(mddev)函数进行检查，当需要同步
 4. 如果有坏盘，则移除该盘；
 5. 如果阵列处于降级状态，则尝试添加热备盘；
 6. 如果阵列有热备盘或者不处于同步状态，则启动同步线程。
+
+
+
+
+
+
+
+####raid5 阵列同步线程注册
+&emsp;&emsp;在raid5.c文件中，在函数run（）中通过mddev->sync_thread = md_register_thread(md_do_sync, mddev,"reshape");实现了同步函数的注册。我们可以知道raid5的同步处理函数为md_do_sync。
+####raid5阵列同步的触发点
+
 
 
 
