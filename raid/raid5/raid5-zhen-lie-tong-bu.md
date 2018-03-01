@@ -6,6 +6,7 @@
 ####raid5守护线程raid5d()
 &emsp;&emsp;raid5d()为raid5的守护线程，其注册流程为：
 md_run（）-> (pers->run(mddev)) -> setup_conf(mddev) -> md_register_thread(raid5d, mddev, pers_name)。
+raid5d()函数调用md_check_recovery(mddev)函数进行检查，当需要同步时，启动同步线程进行同步。
 
 ####raid5 阵列同步线程注册
 &emsp;&emsp;在raid5.c文件中，在函数run（）中通过mddev->sync_thread = md_register_thread(md_do_sync, mddev,"reshape");实现了同步函数的注册。我们可以知道raid5的同步处理函数为md_do_sync。
