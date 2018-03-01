@@ -37,8 +37,8 @@ raid5d()函数调用md_check_recovery(mddev)函数进行检查，当需要同步
 3. 是否同步完成
 ```c
 if (mddev->sync_thread) { //同步完成，获得结果，释放同步线程
-	md_reap_sync_thread(mddev);
-       	goto unlock;
+       md_reap_sync_thread(mddev);
+       goto unlock;
 }
 ```
 ```c
